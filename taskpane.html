@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Complement GPT Casiope</title>
 
-  <!-- Office.js (facultatif mais propre pour un taskpane) -->
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 
   <style>
@@ -27,20 +26,29 @@
   </div>
 
   <script>
-    const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
-    document.getElementById("btn").addEventListener("click", async () => {
-      const out = document.getElementById("out");
-      out.textContent = "Envoi…";
-      try {
-        const r = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: "Dis bonjour en 5 mots." })
+    Office.onReady((info) => {
+      // On s'assure que le code s'exécute bien dans Excel
+      if (info.host === Office.HostType.Excel) {
+        
+        // Tout votre code qui manipule la page doit être ici
+        const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
+        document.getElementById("btn").addEventListener("click", async () => {
+          const out = document.getElementById("out");
+          out.textContent = "Envoi…";
+          try {
+            const r = await fetch(API_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ prompt: "Dis bonjour en 5 mots." })
+            });
+            const data = await r.json();
+            out.textContent = r.ok ? (data.text || "(réponse vide)") : JSON.stringify(data, null, 2);
+          } catch (e) {
+            out.textContent = "Erreur : " + (e?.message || e);
+          }
         });
-        const data = await r.json();
-        out.textContent = r.ok ? (data.text || "(réponse vide)") : JSON.stringify(data, null, 2);
-      } catch (e) {
-        out.textContent = "Erreur : " + (e?.message || e);
+
+        console.log("Panneau latéral initialisé via Office.onReady !");
       }
     });
   </script>
