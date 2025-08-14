@@ -1,9 +1,9 @@
 {
-  "namespace": "CASIOPE",
   "functions": [
     {
+      "id": "GPT_LIGHT",
       "name": "GPT_LIGHT",
-      "description": "Appelle l’API via le Worker et renvoie le texte.",
+      "description": "Appelle l’API et renvoie le texte.",
       "helpUrl": "https://github.com/AlexHrln/excel-gpt-addon",
       "parameters": [
         {
@@ -16,6 +16,10 @@
       "result": {
         "type": "string",
         "dimensionality": "scalar"
+      },
+      "options": {
+        "stream": false,
+        "cancelable": false
       }
     }
   ]
