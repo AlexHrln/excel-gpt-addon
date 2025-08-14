@@ -1,0 +1,22 @@
+{
+  "namespace": "CASIOPE",
+  "functions": [
+    {
+      "name": "GPT_LIGHT",
+      "description": "Appelle l’API via le Worker et renvoie le texte.",
+      "helpUrl": "https://github.com/<ton-user>/excel-gpt-addon",
+      "parameters": [
+        {
+          "name": "prompt",
+          "description": "Texte à envoyer",
+          "type": "string",
+          "dimensionality": "scalar"
+        }
+      ],
+      "result": {
+        "type": "string",
+        "dimensionality": "scalar"
+      }
+    }
+  ]
+}
