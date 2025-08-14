@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Complement GPT Casiope</title>
+
+  <!-- Office.js (facultatif mais propre pour un taskpane) -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 20px; }
+    .card { border:1px solid #ddd; border-radius:12px; padding:16px; max-width:640px; }
+    button { padding:10px 14px; border-radius:10px; border:1px solid #ccc; cursor:pointer; }
+    #out { white-space: pre-wrap; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Complement GPT Casiope</h2>
+    <p>Utilisez les fonctions dans vos cellules : <code>=CASIOPE.GPT_LIGHT("…")</code></p>
+
+    <hr />
+    <p><strong>Test rapide du proxy</strong> (Cloudflare Worker) :</p>
+    <button id="btn">Envoyer « Dis bonjour en 5 mots. »</button>
+    <div id="out"></div>
+  </div>
+
+  <script>
+    const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
+    document.getElementById("btn").addEventListener("click", async () => {
+      const out = document.getElementById("out");
+      out.textContent = "Envoi…";
+      try {
+        const r = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: "Dis bonjour en 5 mots." })
+        });
+        const data = await r.json();
+        out.textContent = r.ok ? (data.text || "(réponse vide)") : JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = "Erreur : " + (e?.message || e);
+      }
+    });
+  </script>
+</body>
+</html>
