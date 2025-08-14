@@ -1,4 +1,4 @@
-/* global CustomFunctions */
+/* global CustomFunctions, Office */
 
 const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
 
@@ -35,4 +35,7 @@ async function gptLight(prompt) {
   }
 }
 
-CustomFunctions.associate("GPT_LIGHT", gptLight);
+// CORRECTION : On attend qu'Office soit prêt avant d'enregistrer la fonction.
+Office.onReady(() => {
+  CustomFunctions.associate("GPT_LIGHT", gptLight);
+});
