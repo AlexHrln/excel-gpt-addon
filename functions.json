@@ -1,26 +1,20 @@
 {
-  "functions": [
-    {
-      "id": "GPT_LIGHT",
-      "name": "GPT_LIGHT",
-      "description": "Appelle l’API et renvoie le texte.",
-      "helpUrl": "https://github.com/AlexHrln/excel-gpt-addon",
-      "parameters": [
+    "allowCustomDataForDataTypeAny": true,
+    "functions": [
         {
-          "name": "prompt",
-          "description": "Texte à envoyer",
-          "type": "string",
-          "dimensionality": "scalar"
+            "description": "Call OPENAI API",
+            "id": "ASK_GPT",
+            "name": "ASK_GPT",
+            "parameters": [
+                {
+                    "description": "Le texte à envoyer.",
+                    "name": "prompt",
+                    "type": "string"
+                }
+            ],
+            "result": {
+                "type": "string"
+            }
         }
-      ],
-      "result": {
-        "type": "string",
-        "dimensionality": "scalar"
-      },
-      "options": {
-        "stream": false,
-        "cancelable": false
-      }
-    }
-  ]
+    ]
 }
