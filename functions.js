@@ -1,21 +1,18 @@
-/* global CustomFunctions, Office */
-
-const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
-
 /**
- * @customfunction GPT_LIGHT
- * @param {string} prompt
- * @returns {Promise<string>}
+ * Call OPENAI API
+ * @customfunction ASK_GPT
+ * @param {string} prompt Le texte à envoyer.
+ * @returns {Promise<string>} La réponse de l'IA.
  */
-async function gptLight(prompt) {
+export async function askGPT(prompt) {
   if (!prompt || typeof prompt !== "string" || prompt.trim() === "") {
     return "Veuillez fournir un prompt valide.";
   }
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    const timeout = setTimeout(() => controller.abort(), 20000); // 20 secondes de timeout
 
-    const response = await fetch(API_URL, {
+    const response = await fetch("https://gpt-proxy.aherlin.workers.dev/gpt-light", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),
@@ -34,8 +31,3 @@ async function gptLight(prompt) {
     return `Erreur de connexion (proxy) : ${e?.message || String(e)}`;
   }
 }
-
-// CORRECTION : On attend qu'Office soit prêt avant d'enregistrer la fonction.
-Office.onReady(() => {
-  CustomFunctions.associate("GPT_LIGHT", gptLight);
-});
