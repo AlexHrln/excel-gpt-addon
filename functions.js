@@ -1,33 +1,3 @@
-/**
- * Call OPENAI API
- * @customfunction ASK_GPT
- * @param {string} prompt Le texte à envoyer.
- * @returns {Promise<string>} La réponse de l'IA.
- */
-export async function askGPT(prompt) {
-  if (!prompt || typeof prompt !== "string" || prompt.trim() === "") {
-    return "Veuillez fournir un prompt valide.";
-  }
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000); // 20 secondes de timeout
-
-    const response = await fetch("https://gpt-proxy.aherlin.workers.dev/gpt-light", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      const txt = await response.text();
-      return `Erreur HTTP proxy: ${response.status}. Réponse: ${txt}`;
-    }
-    const data = await response.json();
-    return data.text || "";
-  } catch (e) {
-    return `Erreur de connexion (proxy) : ${e?.message || String(e)}`;
-  }
-}
+/*! For license information please see functions.js.LICENSE.txt */
+!function(){"use strict";var t={};function r(){var t,e,o="function"==typeof Symbol?Symbol:{},i=o.iterator||"@@iterator",u=o.toStringTag||"@@toStringTag";function a(r,o,i,u){var a=o&&o.prototype instanceof f?o:f,p=Object.create(a.prototype);return n(p,"_invoke",function(r,n,o){var i,u,a,f=0,p=o||[],s=!1,l={p:0,n:0,v:t,a:y,f:y.bind(t,4),d:function(r,n){return i=r,u=0,a=t,l.n=n,c}};function y(r,n){for(u=r,a=n,e=0;!s&&f&&!o&&e<p.length;e++){var o,i=p[e],y=l.p,v=i[2];r>3?(o=v===n)&&(a=i[(u=i[4])?5:(u=3,3)],i[4]=i[5]=t):i[0]<=y&&((o=r<2&&y<i[1])?(u=0,l.v=n,l.n=i[1]):y<v&&(o=r<3||i[0]>n||n>v)&&(i[4]=r,i[5]=n,l.n=v,u=0))}if(o||r>1)return c;throw s=!0,n}return function(o,p,v){if(f>1)throw TypeError("Generator is already running");for(s&&1===p&&y(p,v),u=p,a=v;(e=u<2?t:a)||!s;){i||(u?u<3?(u>1&&(l.n=-1),y(u,a)):l.n=a:l.v=a);try{if(f=2,i){if(u||(o="next"),e=i[o]){if(!(e=e.call(i,a)))throw TypeError("iterator result is not an object");if(!e.done)return e;a=e.value,u<2&&(u=0)}else 1===u&&(e=i.return)&&e.call(i),u<2&&(a=TypeError("The iterator does not provide a '"+o+"' method"),u=1);i=t}else if((e=(s=l.n<0)?a:r.call(n,l))!==c)break}catch(r){i=t,u=1,a=r}finally{f=1}}return{value:e,done:s}}}(r,i,u),!0),p}var c={};function f(){}function p(){}function s(){}e=Object.getPrototypeOf;var l=[][i]?e(e([][i]())):(n(e={},i,function(){return this}),e),y=s.prototype=f.prototype=Object.create(l);function v(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,n(t,u,"GeneratorFunction")),t.prototype=Object.create(y),t}return p.prototype=s,n(y,"constructor",s),n(s,"constructor",p),p.displayName="GeneratorFunction",n(s,u,"GeneratorFunction"),n(y),n(y,u,"Generator"),n(y,i,function(){return this}),n(y,"toString",function(){return"[object Generator]"}),(r=function(){return{w:a,m:v}})()}function n(t,r,e,o){var i=Object.defineProperty;try{i({},"",{})}catch(t){i=0}n=function(t,r,e,o){function u(r,e){n(t,r,function(t){return this._invoke(r,e,t)})}r?i?i(t,r,{value:e,enumerable:!o,configurable:!o,writable:!o}):t[r]=e:(u("next",0),u("throw",1),u("return",2))},n(t,r,e,o)}function e(t,r,n,e,o,i,u){try{var a=t[i](u),c=a.value}catch(t){return void n(t)}a.done?r(c):Promise.resolve(c).then(e,o)}function o(){var t;return t=r().m(function t(n){var e,o,i,u,a,c;return r().w(function(t){for(;;)switch(t.p=t.n){case 0:if(n&&"string"==typeof n&&""!==n.trim()){t.n=1;break}return t.a(2,"Veuillez fournir un prompt valide.");case 1:return t.p=1,e=new AbortController,o=setTimeout(function(){return e.abort()},2e4),t.n=2,fetch("https://gpt-proxy.aherlin.workers.dev/gpt-light",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:n}),signal:e.signal});case 2:if(i=t.v,clearTimeout(o),i.ok){t.n=4;break}return t.n=3,i.text();case 3:return u=t.v,t.a(2,"Erreur HTTP proxy: ".concat(i.status,". Réponse: ").concat(u));case 4:return t.n=5,i.json();case 5:return a=t.v,t.a(2,a.text||"");case 6:return t.p=6,c=t.v,t.a(2,"Erreur de connexion (proxy) : ".concat((null==c?void 0:c.message)||String(c)))}},t,null,[[1,6]])}),o=function(){var r=this,n=arguments;return new Promise(function(o,i){var u=t.apply(r,n);function a(t){e(u,o,i,a,c,"next",t)}function c(t){e(u,o,i,a,c,"throw",t)}a(void 0)})},o.apply(this,arguments)}t.d=function(r,n){for(var e in n)t.o(n,e)&&!t.o(r,e)&&Object.defineProperty(r,e,{enumerable:!0,get:n[e]})},t.o=function(t,r){return Object.prototype.hasOwnProperty.call(t,r)},CustomFunctions.associate("ASK_GPT",function(t){return o.apply(this,arguments)})}();
+//# sourceMappingURL=functions.js.map
