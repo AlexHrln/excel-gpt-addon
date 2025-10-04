@@ -3,54 +3,166 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Complement GPT Casiope</title>
-
+  <title>Complément GPT Casiope</title>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-
   <style>
-    body { font-family: system-ui, sans-serif; margin: 20px; }
-    .card { border:1px solid #ddd; border-radius:12px; padding:16px; max-width:640px; }
-    button { padding:10px 14px; border-radius:10px; border:1px solid #ccc; cursor:pointer; }
-    #out { white-space: pre-wrap; margin-top:12px; }
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card { 
+      border: 1px solid #ddd; 
+      border-radius: 12px; 
+      padding: 24px; 
+      max-width: 640px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    button { 
+      padding: 12px 20px; 
+      border-radius: 8px; 
+      border: 1px solid #0078d4;
+      background: #0078d4;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #106ebe;
+    }
+    button:disabled {
+      background: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+    #out { 
+      white-space: pre-wrap; 
+      margin-top: 16px;
+      padding: 12px;
+      background: #f8f8f8;
+      border-radius: 8px;
+      border-left: 4px solid #0078d4;
+      font-family: monospace;
+      font-size: 13px;
+      display: none;
+    }
+    #out.show {
+      display: block;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .status.ready {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status.standalone {
+      background: #fff3cd;
+      color: #856404;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>Complement GPT Casiope</h2>
-    <p>Utilisez les fonctions dans vos cellules : <code>=CASIOPE.GPT_LIGHT("…")</code></p>
-
+    <h2>
+      🤖 Complément GPT Casiope
+      <span id="status" class="status standalone">Mode test</span>
+    </h2>
+    
+    <p>Utilisez les fonctions dans vos cellules Excel :</p>
+    <p><code>=CASIOPE.ASK_GPT("Votre question ici")</code></p>
+    
     <hr />
-    <p><strong>Test rapide du proxy</strong> (Cloudflare Worker) :</p>
-    <button id="btn">Envoyer « Dis bonjour en 5 mots. »</button>
+    
+    <p><strong>🧪 Test du proxy Cloudflare</strong></p>
+    <button id="btn">Envoyer "Dis bonjour en 5 mots"</button>
     <div id="out"></div>
   </div>
 
   <script>
-    Office.onReady((info) => {
-      // On s'assure que le code s'exécute bien dans Excel
-      if (info.host === Office.HostType.Excel) {
+    const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
+    
+    // Fonction de test (fonctionne partout)
+    function initTestButton() {
+      const btn = document.getElementById("btn");
+      const out = document.getElementById("out");
+      
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        out.classList.add("show");
+        out.textContent = "⏳ Envoi en cours...";
         
-        // Tout votre code qui manipule la page doit être ici
-        const API_URL = "https://gpt-proxy.aherlin.workers.dev/gpt-light";
-        document.getElementById("btn").addEventListener("click", async () => {
-          const out = document.getElementById("out");
-          out.textContent = "Envoi…";
-          try {
-            const r = await fetch(API_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ prompt: "Dis bonjour en 5 mots." })
-            });
-            const data = await r.json();
-            out.textContent = r.ok ? (data.text || "(réponse vide)") : JSON.stringify(data, null, 2);
-          } catch (e) {
-            out.textContent = "Erreur : " + (e?.message || e);
+        try {
+          const startTime = Date.now();
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: "Dis bonjour en 5 mots." })
+          });
+          
+          const duration = Date.now() - startTime;
+          const data = await response.json();
+          
+          if (response.ok) {
+            out.textContent = `✅ Réponse (${duration}ms) :\n\n${data.text || "(réponse vide)"}`;
+          } else {
+            out.textContent = `❌ Erreur HTTP ${response.status} :\n\n${JSON.stringify(data, null, 2)}`;
           }
-        });
-
-        console.log("Panneau latéral initialisé via Office.onReady !");
+        } catch (error) {
+          out.textContent = `❌ Erreur de connexion :\n\n${error.message}`;
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    }
+    
+    // Initialisation Office (si dans Excel)
+    Office.onReady((info) => {
+      const statusEl = document.getElementById("status");
+      
+      if (info.host === Office.HostType.Excel) {
+        statusEl.textContent = "✅ Excel";
+        statusEl.className = "status ready";
+        console.log("✅ Complément chargé dans Excel");
+      } else {
+        console.log("⚠️ Mode standalone (hors Excel)");
       }
+      
+      // Initialiser le bouton dans tous les cas
+      initTestButton();
     });
+    
+    // Fallback si Office.js ne charge pas (test direct sur GitHub Pages)
+    setTimeout(() => {
+      if (!document.getElementById("btn").onclick && !document.getElementById("btn").disabled) {
+        console.log("⚠️ Office.js non chargé, initialisation en mode standalone");
+        initTestButton();
+      }
+    }, 2000);
   </script>
 </body>
 </html>
