@@ -1,20 +1,29 @@
 {
-    "allowCustomDataForDataTypeAny": true,
-    "functions": [
+  "allowCustomDataForDataTypeAny": true,
+  "allowErrorForDataTypeAny": true,
+  "functions": [
+    {
+      "id": "ASK_GPT",
+      "name": "ASK_GPT",
+      "description": "Appelle l'API GPT via un proxy sécurisé",
+      "helpUrl": "https://github.com/AlexHrln/excel-gpt-addon",
+      "result": {
+        "type": "string",
+        "dimensionality": "scalar"
+      },
+      "parameters": [
         {
-            "description": "Call OPENAI API",
-            "id": "ASK_GPT",
-            "name": "ASK_GPT",
-            "parameters": [
-                {
-                    "description": "Le texte à envoyer.",
-                    "name": "prompt",
-                    "type": "string"
-                }
-            ],
-            "result": {
-                "type": "string"
-            }
+          "name": "prompt",
+          "description": "Le texte à envoyer à GPT",
+          "type": "string",
+          "dimensionality": "scalar"
         }
-    ]
+      ],
+      "options": {
+        "stream": false,
+        "cancelable": true,
+        "volatile": true
+      }
+    }
+  ]
 }
